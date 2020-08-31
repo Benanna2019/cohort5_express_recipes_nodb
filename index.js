@@ -88,6 +88,18 @@ app.put("/recipe", (request, response) => {
   }
 });
 
+app.delete("/recipe", (request, response) => {
+  try {
+    console.log("DELETE RECIPE");
+    const id = request.query.id;
+    recipes = filter(recipe => recipe.id != id, recipes);
+    response.status(200).send(recipes);
+  } catch (error) {
+    console.log(error);
+    response.status(500).send(error);
+  }
+});
+
 app.get("/recipes_by_time", (request, response) => {
   try {
     console.log("RECIPES BY TIME");
