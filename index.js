@@ -1,6 +1,6 @@
-const { recipes, setId } = require("./recipesFakeDB");
+let { recipes, setId } = require("./recipesFakeDB");
 const express = require("express");
-const { filter } = require("ramda");
+const { filter, map } = require("ramda");
 const PORT = 4000;
 
 const app = express();
@@ -43,6 +43,47 @@ app.post("/recipe", (request, response) => {
     recipes.push({ id: setId(), name, img, instructions, cookTime });
     response.status(201).send(recipes);
   } catch (error) {
+    response.status(500).send(error);
+  }
+});
+
+app.put("/recipe", (request, response) => {
+  try {
+    console.log("UPDATE A RECIPE");
+    const id = request.query.id;
+    const name = request.body.name;
+    const img = request.body.img;
+    const instructions = request.body.instructions;
+    const cookTime = request.body.cookTime;
+
+    // let tempRecipe = filter(recipe => recipe.id == id, recipes);
+    let tempRecipe = {};
+    console.log("here");
+    tempRecipe.name = name;
+    tempRecipe.img = img;
+
+    tempRecipe.instructions = instructions;
+    tempRecipe.cookTime = cookTime;
+    tempRecipe.id = Number(id);
+
+    // console.log(tempRecipe, "tempRecipe");
+
+    recipes = map(
+      recipe => (recipe.id == tempRecipe.id ? tempRecipe : recipe),
+      recipes
+    );
+
+    // let tempRecipes = map(
+    //   recipe => (recipe.id == tempRecipe.id ? tempRecipe : recipe),
+    //   recipes
+    // );
+
+    // recipes = [...tempRecipes];
+
+    // console.log(recipes);
+    response.status(200).send(recipes);
+  } catch (error) {
+    console.log(error);
     response.status(500).send(error);
   }
 });
