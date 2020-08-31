@@ -44,4 +44,9 @@ let recipes = [
   }
 ];
 
-module.exports = recipes;
+function setId() {
+  const previousHighestId = recipes[recipes.length - 1].id;
+  return previousHighestId + 1;
+}
+
+module.exports = { recipes, setId };
